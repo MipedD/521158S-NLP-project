@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 # coding: utf-8
 
-# In[1]:
+# In[16]:
 
 
 import csv
@@ -22,19 +22,23 @@ nltk.download('maxent_ne_chunker')
 nltk.download('words')
 
 #below did not work due to 
-#with open('Datafiniti_Hotel_Reviews_Jun19.csv') as csv_file:
+#with open('Datafiniti_Hotel_Reviews_Jun19.csv', encoding = "utf-8") as csv_file:
  #   article = csv_file.read()
-with open('Datafiniti_Hotel_Reviews_Jun19.csv', encoding = "utf-8") as csv_file:
-    article = csv_file.read()
+#with open('Datafiniti_Hotel_Reviews_Jun19.csv', encoding = "utf-8") as csv_file:
+article = pd.read_csv('Datafiniti_Hotel_Reviews_Jun19.csv', usecols=['reviews.text'], encoding = "utf-8")
+type(article)
+article = pd.DataFrame.to_string(article)
+type(article)
+    
 
 
-# In[2]:
+# In[18]:
 
 
 from nltk.tokenize import sent_tokenize, word_tokenize
 
 
-# In[ ]:
+# In[19]:
 
 
 # Tokenize the article into sentences: sentences
@@ -50,7 +54,7 @@ pos_sentences = [nltk.pos_tag(sent) for sent in token_sentences]
 chunked_sentences = nltk.ne_chunk_sents(pos_sentences, binary=True)
 
 
-# In[ ]:
+# In[20]:
 
 
 chunked_sentences = nltk.ne_chunk_sents(pos_sentences, binary=False)
