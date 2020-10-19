@@ -10,7 +10,9 @@ included_cols = sys.argv[2].split(',')
 
 with open(file_name) as csv_file:
     csv_reader = csv.reader(csv_file, delimiter=',', quotechar='"')
-    included_cols = map(int, included_cols)
+ 
+    for i in range(0, len(included_cols)): 
+        included_cols[i] = int(included_cols[i])
 
     result = open('result.txt', mode='w')
     csv_writer = csv.writer(result)
@@ -22,4 +24,4 @@ with open(file_name) as csv_file:
         #print(content)
         line_count += 1
 
-    print 'Processed', line_count, 'rows.'
+    print ('Processed', line_count, 'rows.')
