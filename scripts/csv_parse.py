@@ -1,5 +1,6 @@
 import csv
 import sys
+import time
 
 file_name = sys.argv[1]
 included_cols = sys.argv[2].split(',')
@@ -17,6 +18,7 @@ with open(file_name) as csv_file:
     result = open('result.txt', mode='w')
     csv_writer = csv.writer(result)
     line_count = 0
+    start_time = time.time()
  
     for row in csv_reader:
         content = list(row[i] for i in included_cols)
@@ -24,4 +26,4 @@ with open(file_name) as csv_file:
         #print(content)
         line_count += 1
 
-    print ('Processed', line_count, 'rows.')
+    print('Processed', line_count, 'rows in', "{:.2f}".format(time.time() - start_time), 'seconds.')

@@ -1,6 +1,7 @@
 import csv
 import sys
 from textblob import TextBlob
+import time
 
 file_name = sys.argv[1]
 review_col = sys.argv[2]
@@ -19,6 +20,7 @@ with open(file_name) as csv_file:
     result = open('textblob_result.txt', mode='w')
     csv_writer = csv.writer(result)
     line_count = 0
+    start_time = time.time()
  
     for row in csv_reader:
         if line_count == 0:
@@ -36,4 +38,4 @@ with open(file_name) as csv_file:
             csv_writer.writerow(row)
             line_count += 1
 
-    print('Processed', line_count, 'rows.')
+    print('Processed', line_count, 'rows in', "{:.2f}".format(time.time() - start_time), 'seconds.')
