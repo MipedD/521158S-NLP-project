@@ -1,29 +1,51 @@
 import csv
 import sys
 import time
+import getopt
 
-file_name = sys.argv[1]
-included_cols = sys.argv[2].split(',')
-
-# This module parses wanted columns of a .csv file to a new result.txt file.
+# This module parses wanted columns of a .csv file to a new
+# file and adds column "id" as the first column.
 #
-# Usage: python csv_parse.py [file] [col,col,...]
+# Usage: python csv_parse.py -i [in_file] -o [out_file] -c [col, col,...]
 
-with open(file_name) as csv_file:
-    csv_reader = csv.reader(csv_file, delimiter=',', quotechar='"')
- 
-    for i in range(0, len(included_cols)): 
-        included_cols[i] = int(included_cols[i])
+def process_csv(in_file, out_file, columns):
+    start_time = time.time()
+    
+    f = open(in_file, "r") 
+    csv_reader = csv.reader(f, delimiter=',', quotechar='"')
 
-    result = open('result.txt', mode='w')
+    columns = columns.split(',')
+    for i in range(0, len(columns)): 
+        columns[i] = int(columns[i])
+
+    result = open(out_file, mode='w')
     csv_writer = csv.writer(result)
     line_count = 0
-    start_time = time.time()
  
     for row in csv_reader:
-        content = list(row[i] for i in included_cols)
+        content = list(row[i] for i in columns)
+        content.insert(0, ("id" if line_count == 0 else line_count))
         csv_writer.writerow(content)
-        #print(content)
         line_count += 1
 
     print('Processed', line_count, 'rows in', "{:.2f}".format(time.time() - start_time), 'seconds.')
+    
+argv = sys.argv[1:]
+opts, args = getopt.getopt(argv, 'i:o:c:')
+
+input_file = ""
+output_file = ""
+columns = ""
+
+for opt in opts:
+    if opt[0] == '-i':
+        input_file = opt[1]
+    elif opt[0] == '-o':
+        output_file = opt[1]
+    elif opt[0] == '-c':
+        columns = opt[1]
+
+if input_file == "" or output_file == "" or columns == "":
+    print("Usage: python csv_parse.py -i [in_file] -o [out_file] -c [col, col,...]")
+else:
+    process_csv(input_file, output_file, columns)
