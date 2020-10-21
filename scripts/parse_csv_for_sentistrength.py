@@ -8,9 +8,6 @@ Notes:  sentistrength wants text in a format such that each line contains
         the text to be analyzed. This means that the reviews.text needs to
         be extracted from the dataset into a separate file which can be passed
         to sentistrength.
-
-        Pass -i <file> to specify the input file and -o <file> to specify the
-        output file. -c <column_name> selects the column to extract
 """
 
 import csv
@@ -35,21 +32,20 @@ def read_data_from_csv(a_file, a_delimiter, a_newline):
     return ret_dict
 
 #Write dataset column a_column into a file in a format sentistrength approves
-def dataset_column_to_txt(a_data, a_column, a_output_file_name):
+def dataset_to_txt(a_data, a_output_file_name):
     #Write reviews.text from each row to a .txt file. Text separated with "\n"
-    dbgmsg = "Writing column \"" + a_data["header"][a_column] + "\" to file \"" + a_output_file_name + "\"..."
+    dbgmsg = "Writing column to file \"" + a_output_file_name + "\"..."
     print(dbgmsg)
-    f = open(a_output_file_name, "a")
-    #Sentistrenght expects a header
-    f.write("Source text\n")
+    result = open(a_output_file_name, mode='w')
+    csv_writer = csv.writer(result, delimiter='\t')
+    csv_writer.writerow(a_data["header"])
     for row in a_data["body"]:
-        f.write(row[a_column] + "\n")
-    f.close()
+        csv_writer.writerow(row)
     dbgmsg = "=> Probably a success."
     print(dbgmsg)
 
 argv = sys.argv[1:]
-opts, args = getopt.getopt(argv, 'i:o:c:')
+opts, args = getopt.getopt(argv, 'i:o:')
 
 input_file = ""
 output_file = ""
@@ -60,15 +56,9 @@ for opt in opts:
         input_file = opt[1]
     elif opt[0] == '-o':
         output_file = opt[1]
-    elif opt[0] == '-c':
-        column = opt[1]
 
 if input_file == "" or output_file == "":
     print("Please specify input and output file")
 else:
     data = read_data_from_csv(input_file, dataset_delimiter, dataset_newline)
-    index = data["header"].index(column)
-    if index != -1:
-        dataset_column_to_txt(data, index, output_file)
-    else:
-        print("Invalid column.")
+    dataset_to_txt(data, output_file)
