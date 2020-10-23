@@ -4,8 +4,8 @@
 
 Running the java version is fairly simple. In the uploaded sentistrength output I have used mostly the default settings. I ran sentistrength with the following command:
 
-java -jar path/to/SentiStrengthCom.jar sentidata path/to/sentidata/ input path/to/input_file annotateCol 3 overwrite
-java -jar path/to/SentiStrengthCom.jar sentidata path/to/sentidata/ input path/to/input_file annotateCol 3 overwrite scale
+1) java -jar path/to/SentiStrengthCom.jar sentidata path/to/sentidata/ input path/to/input_file annotateCol 3 overwrite
+2) java -jar path/to/SentiStrengthCom.jar sentidata path/to/sentidata/ input path/to/input_file annotateCol 3 overwrite scale
 
 #### notes
 * the input is expected to be .csv but tab separated ('\t')
