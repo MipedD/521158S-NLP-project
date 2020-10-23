@@ -18,7 +18,7 @@ def process_csv(in_file, out_file, column):
     csv_reader = csv.reader(f, delimiter=',', quotechar='"')
     
     result = open(out_file, mode='w')
-    csv_writer = csv.writer(result)
+    csv_writer = csv.writer(result, delimiter=';')
     
     review_col = int(column)
     sentiment_colums = ['pos', 'neu', 'neg', 'compound']
