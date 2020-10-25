@@ -11,14 +11,14 @@ import getopt
 def process_csv(in_file, out_file, columns):
     start_time = time.time()
     
-    f = open(in_file, "r") 
+    f = open(in_file, "r", encoding='utf-8')
     csv_reader = csv.reader(f, delimiter=',', quotechar='"')
 
     columns = columns.split(',')
     for i in range(0, len(columns)): 
         columns[i] = int(columns[i])
 
-    result = open(out_file, mode='w')
+    result = open(out_file, mode='w', encoding='utf-8')
     csv_writer = csv.writer(result)
     line_count = 0
  
