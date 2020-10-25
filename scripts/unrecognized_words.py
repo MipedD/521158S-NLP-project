@@ -27,7 +27,9 @@ def num_unrecognized_words(a_review):
     unrecognized = 0
     recognized = 0
     #tokenize
-    tokens = wpt.tokenize(a_review)
+    tokens = []
+    try: tokens = wpt.tokenize(a_review)
+    except: print("unable to handle tokenization for", a_review)
     total = len(tokens)
     for token in tokens:
         if not wordnet.synsets(token):
@@ -55,7 +57,6 @@ def process_reviews(a_data, a_col):
     a_data["recognized.percent"] = a_data["recognized"] / a_data["total"]
     #let's check what are the percentages for ambiguous and non-ambiguous
     print(a_data.groupby(["ambiguous"], as_index=False).mean())
-
 
 def save_data_to_csv(a_data, a_file_name):
     a_data.to_csv(a_file_name, index=False)

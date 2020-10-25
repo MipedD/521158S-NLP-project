@@ -48,7 +48,9 @@ def read_reviews_dataset(a_file, a_delimiter):
 def ari_for_col(a_data, a_col):
     ari_col = []
     for review in a_data[a_col]:
-        ari = textstat.automated_readability_index(review)
+        ari = -1
+        try: ari = textstat.automated_readability_index(review)
+        except: print("unable to find ARI for", review) 
         ari_col.append(ari)
     a_data["ari"] = ari_col
     return a_data
@@ -78,5 +80,6 @@ else:
     dataset = read_reviews_dataset(input_file, ',')
     print("Finding ARI")
     dataset_ari = ari_for_col(dataset, column)
+    print(dataset_ari.groupby(["ambiguous"], as_index=False).mean())
     print("Saving output to", output_file)
     save_data_to_csv(dataset_ari, output_file)
