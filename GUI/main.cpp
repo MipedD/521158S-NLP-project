@@ -11,6 +11,15 @@
 
 #include "pythonscriptrunner.h"
 #include "task1widget.h"
+#include "task0widget.h"
+
+void setupTaskWidget(TaskWidget *task, QTabWidget *tabWidget, PythonScriptRunner *runner)
+{
+    task->setScriptRunner(runner);
+    task->setScriptsDirectory(tabWidget->property("scriptDir").toString());
+    task->setDatasetDirectory(tabWidget->property("dataDir").toString());
+    tabWidget->addTab(task, task->taskName());
+}
 
 int main(int argc, char *argv[])
 {
@@ -65,14 +74,16 @@ int main(int argc, char *argv[])
     logView->setReadOnly(true);
 
     QTabWidget *tasksTabWidget = new QTabWidget(&root);
-    //Tab for task 1
-    Task1Widget *t1w = new Task1Widget;
-    t1w->setScriptRunner(&scriptRunner);
-    t1w->setDatasetDirectory(QDir(dataSetDir));
-    t1w->setScriptsDirectory(QDir(scriptsDir));
-    tasksTabWidget->addTab(t1w, "Task 1");
-    //Tab for task 2
-    // etc etc
+    tasksTabWidget->setProperty("dataDir", dataSetDir);
+    tasksTabWidget->setProperty("scriptDir", scriptsDir);
+    //List of tasks
+    QVector<TaskWidget*> tasks;
+    tasks << new Task0Widget(tasksTabWidget, "Preparation");
+    tasks << new Task1Widget(tasksTabWidget, "Task 1");
+    //Setup each task in gui
+    for(auto task : tasks) {
+        setupTaskWidget(task, tasksTabWidget, &scriptRunner);
+    }
 
     //Add everything to layout
     layout->addWidget(tasksTabWidget);

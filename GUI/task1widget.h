@@ -14,6 +14,8 @@ public:
     explicit Task1Widget(QWidget *parent = nullptr, const QString &taskName = QString());
 
 protected:
+    virtual void runSentiStrength();
+    virtual void addDataToDb();
     virtual void doExecuteTask();
 };
 
