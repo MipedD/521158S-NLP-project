@@ -16,6 +16,7 @@ public:
 
 signals:
 
+    void started();
     void pythonOutput(const QString &output);
     void result(const QString &result);
     void completed();

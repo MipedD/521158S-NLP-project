@@ -15,6 +15,11 @@ Task1Widget::Task1Widget(QWidget *parent, const QString &taskName)
             "After analysis is completed the input file for SentiStrength is read and combined with the main database"
             " and temporary file is deleted as it is now obsolete.";
     setDescription(description);
+
+    QStringList requirements;
+    requirements << "Preparation step completed";
+    requirements << "Java.exe in path";
+    setRequirements(requirements);
 }
 
 void Task1Widget::doExecuteTask()
@@ -51,15 +56,16 @@ void Task1Widget::runSentiStrength()
     sentistrength->setProcessChannelMode(QProcess::ProcessChannelMode::MergedChannels);
     sentistrength->setProgram("java.exe");
     sentistrength->setArguments(args);
-    m_runner->pythonOutput("--- Running sentistrength (java.exe) ---\n");
+    m_runner->writeToLog("--- Running sentistrength (java.exe) ---\n");
 
     QObject::connect(sentistrength, &QProcess::stateChanged, [this,sentistrength](QProcess::ProcessState state){
         switch(state)
         {
         case QProcess::ProcessState::NotRunning:
             sentistrength->deleteLater();
-            m_runner->pythonOutput("--- java.exe finished ---\n");
+            m_runner->writeToLog("--- java.exe finished ---\n");
             addDataToDb();
+            m_runner->completed();
             Q_FALLTHROUGH();
         default:
             break;
@@ -67,10 +73,11 @@ void Task1Widget::runSentiStrength()
     });
 
     QObject::connect(sentistrength, &QProcess::readyRead, [this, sentistrength]{
-        m_runner->pythonOutput(sentistrength->readAll());
+        m_runner->writeToLog(sentistrength->readAll());
     });
 
     sentistrength->start();
+    m_runner->started();
 }
 
 void Task1Widget::addDataToDb()

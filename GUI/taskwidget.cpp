@@ -11,7 +11,8 @@ TaskWidget::TaskWidget(QWidget *parent, const QString &taskName)
     : QWidget(parent),
       m_runner(nullptr),
       m_taskDescription(nullptr),
-      m_taskName(taskName)
+      m_taskName(taskName),
+      m_executeButton(nullptr)
 {
     const QString btnText = "Execute %1";
     const QString titleText ="Step: %1";
@@ -35,9 +36,9 @@ TaskWidget::TaskWidget(QWidget *parent, const QString &taskName)
     m_taskDescription->setText("Description goes here");
     m_taskDescription->setTextInteractionFlags(m_taskDescription->textInteractionFlags() | Qt::LinksAccessibleByMouse);
     m_taskDescription->setOpenExternalLinks(true);
-    QPushButton *executeBtn = new QPushButton(this);
-    executeBtn->setText(btnText.arg(m_taskName));
-    QObject::connect(executeBtn, &QPushButton::clicked,
+    m_executeButton = new QPushButton(this);
+    m_executeButton->setText(btnText.arg(m_taskName));
+    QObject::connect(m_executeButton, &QPushButton::clicked,
                      this, &TaskWidget::executeTask);
 
     bgLayout->addWidget(m_taskDescription, 2);
@@ -45,13 +46,20 @@ TaskWidget::TaskWidget(QWidget *parent, const QString &taskName)
     background->setLayout(bgLayout);
     layout->addWidget(title);
     layout->addWidget(background);
-    layout->addWidget(executeBtn);
+    layout->addWidget(m_executeButton);
     setLayout(layout);
 }
 
 void TaskWidget::setScriptRunner(PythonScriptRunner *scriptRunner)
 {
     m_runner = scriptRunner;
+    connect(m_runner, &PythonScriptRunner::started, [this]{
+        this->m_executeButton->setDisabled(true);
+    });
+
+    connect(m_runner, &PythonScriptRunner::completed, [this]{
+        this->m_executeButton->setEnabled(true);
+    });
 }
 
 void TaskWidget::setDatasetDirectory(const QDir &directory)

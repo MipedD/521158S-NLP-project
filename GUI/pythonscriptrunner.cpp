@@ -45,6 +45,7 @@ void PythonScriptRunner::runPythonScript(const QString &scriptname, const QStrin
     });
 
     pythonProcess->start();
+    started();
 }
 
 void PythonScriptRunner::writeToLog(const QString &str)

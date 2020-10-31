@@ -3,6 +3,7 @@
 
 #include <QWidget>
 #include <QTextBrowser>
+#include <QPushButton>
 #include <QDir>
 
 #include "pythonscriptrunner.h"
@@ -33,6 +34,7 @@ protected:
     QTextBrowser *m_taskDescription;
     QTextEdit *m_taskRequirements;
     QString m_taskName;
+    QPushButton *m_executeButton;
 };
 
 #endif // TASKWIDGET_H
