@@ -19,6 +19,7 @@ SOURCES += \
         pythonscriptrunner.cpp \
         task0widget.cpp \
         task1widget.cpp \
+        task2widget.cpp \
         taskwidget.cpp
 
 # Default rules for deployment.
@@ -30,4 +31,5 @@ HEADERS += \
     pythonscriptrunner.h \
     task0widget.h \
     task1widget.h \
+    task2widget.h \
     taskwidget.h
