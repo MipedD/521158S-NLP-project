@@ -56,7 +56,14 @@ def process_reviews(a_data, a_col):
     a_data["total"] = total
     a_data["recognized.percent"] = a_data["recognized"] / a_data["total"]
     #let's check what are the percentages for ambiguous and non-ambiguous
-    print(a_data.groupby(["ambiguous"], as_index=False).mean())
+    result = a_data.groupby(["ambiguous"], as_index=False).mean()
+    ambiguous = a_data[a_data['ambiguous'] == True]
+    non_ambiguous = a_data[a_data['ambiguous'] == False]
+    ambiguous_mean = ambiguous['recognized.percent'].mean()
+    non_ambigious_mean = non_ambiguous['recognized.percent'].mean()
+    print(result)
+    print("<result>Average known words percetange for ambiguous:",ambiguous_mean, "</result>")
+    print("<result>Average known words percetange for unambiguous:",non_ambigious_mean, "</result>")
 
 def save_data_to_csv(a_data, a_file_name):
     a_data.to_csv(a_file_name, index=False)

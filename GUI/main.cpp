@@ -86,7 +86,7 @@ int main(int argc, char *argv[])
     tasks << new Task1Widget(tasksTabWidget, "Task 1");
     tasks << new Task2Widget(tasksTabWidget, "Task 2");
     tasks << new Task4Widget(tasksTabWidget, "Task 4");
-    tasks << new Task10Widget(tasksTabWidget, "Task 10");
+    tasks << new Task10Widget(tasksTabWidget, "Tasks 10 and 11");
     tasks << new Task12Widget(tasksTabWidget, "Task 12");
     //Setup each task in gui
     for(auto task : tasks) {

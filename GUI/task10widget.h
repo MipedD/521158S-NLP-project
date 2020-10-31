@@ -12,6 +12,7 @@ public:
     // TaskWidget interface
 protected:
     void doExecuteTask() override;
+    void executePart2();
 };
 
 #endif // TASK10WIDGET_H
