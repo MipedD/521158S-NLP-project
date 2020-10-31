@@ -1,7 +1,7 @@
-import csv
 import sys
 import time
 import getopt
+import pandas as pd
 from nltk.sentiment.vader import SentimentIntensityAnalyzer
 
 # This module runs Vader sentiment analysis on a text in a single column in .csv file.
@@ -12,39 +12,28 @@ from nltk.sentiment.vader import SentimentIntensityAnalyzer
 # Usage: python vader_sentiment.py.py -i [in_file] -o [out_file] -c [column]
 
 def process_csv(in_file, out_file, column):
+    print('Processing..')
     start_time = time.time()
-    
-    f = open(in_file, "r", encoding='utf-8')
-    csv_reader = csv.reader(f, delimiter=',', quotechar='"')
-    
-    result = open(out_file, mode='w', encoding='utf-8')
-    csv_writer = csv.writer(result, delimiter=';')
-    
-    review_col = int(column)
-    sentiment_colums = ['pos', 'neu', 'neg', 'compound']
     sid = SentimentIntensityAnalyzer()
+    data = pd.read_csv(in_file, sep=',', encoding='utf-8')
+    out_data = data
+    sentiment_colums = ['pos', 'neu', 'neg', 'compound']
+    sentiments = {"pos" : list(), 'neg' : list(), 'neu' : list(), 'compound' : list()}
     line_count = 0
-    
-    for row in csv_reader:
-        if line_count == 0:
-            for sentiment in sentiment_colums:
-                row.append(sentiment)
-
-            csv_writer.writerow(row)
-            line_count += 1
-        else: 
-            content = list(row)
-            review = row[review_col]
-            ss = sid.polarity_scores(review)
-            for sentiment in sentiment_colums:
-                row.append(ss.get(sentiment))
-                
-            #print(row)
-            csv_writer.writerow(row)
-            line_count += 1
-
+    for review in data[column]:
+        line_count = line_count + 1
+        try: ss = sid.polarity_scores(review)
+        except: ss = {'pos' : 'NaN', 'neu' : 'NaN', 'neg' : "NaN", 'compound' : 'NaN'}
+        for sentiment in sentiment_colums:
+            res = ss.get(sentiment)
+            sentiments[sentiment].append(res)
+    out_data["sentiment.positive.vader"] = sentiments['pos']
+    out_data["sentiment.negative.vader"] = sentiments['neg']
+    out_data["sentiment.neutral.vader"] = sentiments['neu']
+    out_data["sentiment.overall.vader"] = sentiments['compound']
+    out_data.to_csv(out_file, index=False, encoding='utf_8', sep=',')
     print('Processed', line_count, 'rows in', "{:.2f}".format(time.time() - start_time), 'seconds.')
-    
+
 argv = sys.argv[1:]
 opts, args = getopt.getopt(argv, 'i:o:c:')
 
