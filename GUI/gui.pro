@@ -17,6 +17,7 @@ DEFINES += QT_DEPRECATED_WARNINGS
 SOURCES += \
         main.cpp \
         pythonscriptrunner.cpp \
+        task0widget.cpp \
         task1widget.cpp \
         taskwidget.cpp
 
@@ -27,5 +28,6 @@ else: unix:!android: target.path = /opt/$${TARGET}/bin
 
 HEADERS += \
     pythonscriptrunner.h \
+    task0widget.h \
     task1widget.h \
     taskwidget.h
