@@ -17,6 +17,13 @@ void PythonScriptRunner::runPythonScript(const QString &scriptname, const QStrin
 
     pythonOutput("--- Starting python.exe ---\n");
 
+    QString scriptInfo("Running %1 with arguments:\n %2");
+    QString argsStr;
+    for(auto str : args)
+        argsStr.append(str + "\n");
+
+    pythonOutput(scriptInfo.arg(scriptname).arg(argsStr));
+
     QObject::connect(pythonProcess, &QProcess::stateChanged, [this,pythonProcess](QProcess::ProcessState state){
         switch(state)
         {
@@ -31,8 +38,36 @@ void PythonScriptRunner::runPythonScript(const QString &scriptname, const QStrin
     });
 
     QObject::connect(pythonProcess, &QProcess::readyRead, [this, pythonProcess]{
-        pythonOutput(pythonProcess->readAll());
+        while(pythonProcess->canReadLine()){
+            QByteArray line = pythonProcess->readLine();
+            pythonOutput(parseResults(line));
+        }
     });
 
     pythonProcess->start();
+}
+
+void PythonScriptRunner::writeToLog(const QString &str)
+{
+    pythonOutput(str);
+}
+
+QString PythonScriptRunner::parseResults(const QByteArray &input)
+{
+    QHash<QString, QString> highlightForTag;
+    highlightForTag.insert("<%1result>", "green");
+
+    QString output(input);
+
+    const QString span("<span style=\"color:%1\">");
+
+    for(auto tag : highlightForTag.keys()){
+        if(output.contains(tag.arg(""))){
+            output.replace(tag.arg(""),span.arg(highlightForTag.value(tag)));
+            output.replace(tag.arg("/"), "</span>");
+            result(output);
+        }
+    }
+
+    return output;
 }

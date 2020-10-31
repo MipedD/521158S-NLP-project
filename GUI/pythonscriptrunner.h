@@ -11,10 +11,13 @@ class PythonScriptRunner : public QObject
 public:
     PythonScriptRunner(QObject *parent = nullptr);
     void runPythonScript(const QString &scriptname, const QStringList &args);
+    void writeToLog(const QString &str);
+    QString parseResults(const QByteArray &input);
 
 signals:
 
     void pythonOutput(const QString &output);
+    void result(const QString &result);
     void completed();
 };
 
