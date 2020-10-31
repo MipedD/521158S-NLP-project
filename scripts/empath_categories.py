@@ -3,6 +3,7 @@ import sys
 import getopt
 import time
 import pandas as pd
+import os
 from empath import Empath
 
 # This module runs Empath category analysis on a text in a single column in .csv file.
@@ -71,9 +72,9 @@ for opt in opts:
 if input_file == "" or output_file == "" or column == "":
     print("Usage: python empath_categories.py.py -i [in_file] -o [out_file] -c [column]")
 else:
-    #process_csv(input_file, output_file, column)
-    pass
+    process_csv(input_file, output_file, column)
     if append_to_input:
         print("Appending results to input file.")
         data = pd.read_csv(output_file, sep=',', encoding='utf-8')
-        data.to_csv(input_file, sep=',', encoding='utf-8')
+        data.to_csv(input_file, sep=',', encoding='utf-8', index=False)
+        os.remove(output_file)

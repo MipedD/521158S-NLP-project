@@ -13,6 +13,7 @@
 #include "task1widget.h"
 #include "task0widget.h"
 #include "task2widget.h"
+#include "task4widget.h"
 
 void setupTaskWidget(TaskWidget *task, QTabWidget *tabWidget, PythonScriptRunner *runner)
 {
@@ -82,6 +83,7 @@ int main(int argc, char *argv[])
     tasks << new Task0Widget(tasksTabWidget, "Preparation");
     tasks << new Task1Widget(tasksTabWidget, "Task 1");
     tasks << new Task2Widget(tasksTabWidget, "Task 2");
+    tasks << new Task4Widget(tasksTabWidget, "Task 4");
     //Setup each task in gui
     for(auto task : tasks) {
         setupTaskWidget(task, tasksTabWidget, &scriptRunner);
