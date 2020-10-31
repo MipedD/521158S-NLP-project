@@ -26,8 +26,12 @@ import sys
 import getopt
 from sklearn.preprocessing import MinMaxScaler
 
+#This is the border between negative and positive. Everything <= is negative,
+#and everything greater is positive
+neg_pos_treshold = 0.5
+
 def read_reviews_dataset(a_file, a_delimiter):
-    data = pd.read_csv(a_file, sep=a_delimiter)
+    data = pd.read_csv(a_file, sep=a_delimiter, encoding='utf-8')
     return data
 
 def normalize_column(a_data, a_column):
@@ -37,13 +41,16 @@ def normalize_column(a_data, a_column):
     a_data[a_column] = target_col_scaled
 
 def calculate_discrepancy(a_data, a_rating, a_sentiment):
-    a_data["discrepancy"] = abs(a_data[a_rating] - a_data[a_sentiment])
+    a_data["discrepancy"] = abs(a_data[a_rating] - a_data[a_sentiment])# and a_data["correct"]
+    a_data["overall_accurate"] = (a_data[a_rating] > neg_pos_treshold) & (a_data[a_sentiment] > neg_pos_treshold)
+    return a_data
 
 def classify_ambiguous(a_data, a_treshold):
-    a_data["ambiguous"] = a_data["discrepancy"] > a_treshold
+    a_data["ambiguous"] = (a_data["discrepancy"] > a_treshold) & (a_data["overall_accurate"])
+    return a_data
 
 def save_data_to_csv(a_data, a_file_name):
-    a_data.to_csv(a_file_name, index=False)
+    a_data.to_csv(a_file_name, index=False, encoding='utf-8')
 
 argv = sys.argv[1:]
 opts, args = getopt.getopt(argv, 'i:o:t:')
@@ -65,15 +72,17 @@ if input_file == "" or output_file == "":
 else:
     #Read vader output
     print("Reading input..")
-    vader_output = read_reviews_dataset(input_file, ';')
+    original = read_reviews_dataset(input_file, ',')
+    copy = original.copy()
     print("Normalizing sentiment..")
-    normalize_column(vader_output, "compound")
+    normalize_column(copy, "sentiment.overall.vader")
     print("Normalizing ratings..")
-    normalize_column(vader_output, "reviews.rating")
+    normalize_column(copy, "reviews.rating")
     print("Calculating discrepancy")
-    calculate_discrepancy(vader_output, "reviews.rating", "compound")
+    copy = calculate_discrepancy(copy, "reviews.rating", "sentiment.overall.vader")
     print("Marking reviews ambiguous based on discrepancy exceeding", treshold)
-    classify_ambiguous(vader_output, treshold)
+    copy = classify_ambiguous(copy, treshold)
     print("Writing results into", output_file)
-    save_data_to_csv(vader_output, output_file)
+    original["ambiguous"] = copy["ambiguous"]
+    save_data_to_csv(original, output_file)
     print("Done.")

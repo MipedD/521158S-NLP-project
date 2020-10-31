@@ -18,6 +18,7 @@ SOURCES += \
         main.cpp \
         pythonscriptrunner.cpp \
         task0widget.cpp \
+        task10widget.cpp \
         task1widget.cpp \
         task2widget.cpp \
         task4widget.cpp \
@@ -31,6 +32,7 @@ else: unix:!android: target.path = /opt/$${TARGET}/bin
 HEADERS += \
     pythonscriptrunner.h \
     task0widget.h \
+    task10widget.h \
     task1widget.h \
     task2widget.h \
     task4widget.h \
