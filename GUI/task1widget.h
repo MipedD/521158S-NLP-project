@@ -4,26 +4,17 @@
 #include <QWidget>
 #include <QDir>
 
+#include "taskwidget.h"
 #include "pythonscriptrunner.h"
 
-class Task1Widget : public QWidget
+class Task1Widget : public TaskWidget
 {
     Q_OBJECT
 public:
-    explicit Task1Widget(QWidget *parent = nullptr);
-    void setScriptRunner(PythonScriptRunner *runner);
-    void setDatasetDirectory(const QDir &directory);
-    void setScriptsDirectory(const QDir &directory);
+    explicit Task1Widget(QWidget *parent = nullptr, const QString &taskName = QString());
 
-private slots:
-
-    void executeTask1();
-
-private:
-    PythonScriptRunner *runner;
-    QDir scriptsDir;
-    QDir datasetDir;
-
+protected:
+    virtual void doExecuteTask();
 };
 
 #endif // TASK1WIDGET_H
