@@ -19,10 +19,10 @@ from nltk import ne_chunk
 def process_csv(in_file, out_file, column):
     start_time = time.time()
     
-    f = open(in_file, "r") 
+    f = open(in_file, "r", encoding='utf-8') 
     csv_reader = csv.reader(f, delimiter=',', quotechar='"')
     
-    result = open(out_file, mode='w')
+    result = open(out_file, mode='w', encoding='utf-8')
     csv_writer = csv.writer(result)
 
     review_col = int(column)
