@@ -16,6 +16,8 @@ public:
     void setDatasetDirectory(const QDir &directory);
     void setScriptsDirectory(const QDir &directory);
     void setDescription(const QString &description);
+    void setRequirements(const QStringList &requirements);
+    void appendResults(const QString &results);
     QString taskName() const;
 
 private slots:
@@ -29,6 +31,7 @@ protected:
     QDir m_scriptsDir;
     QDir m_datasetDir;
     QTextEdit *m_taskDescription;
+    QTextEdit *m_taskRequirements;
     QString m_taskName;
 };
 

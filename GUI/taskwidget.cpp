@@ -1,8 +1,11 @@
 #include "taskwidget.h"
 
 #include <QVBoxLayout>
+#include <QHBoxLayout>
 #include <QPushButton>
 #include <QLabel>
+
+#include <QDebug>
 
 TaskWidget::TaskWidget(QWidget *parent, const QString &taskName)
     : QWidget(parent),
@@ -13,6 +16,9 @@ TaskWidget::TaskWidget(QWidget *parent, const QString &taskName)
     const QString btnText = "Execute %1";
     const QString titleText ="Step: %1";
 
+    QWidget *background = new QWidget(this);
+    QHBoxLayout *bgLayout = new QHBoxLayout;
+
     QLabel *title = new QLabel(this);
     title->setText(titleText.arg(m_taskName));
     QFont titleFont = title->font();
@@ -20,6 +26,10 @@ TaskWidget::TaskWidget(QWidget *parent, const QString &taskName)
     title->setFont(titleFont);
 
     QVBoxLayout *layout = new QVBoxLayout;
+    m_taskRequirements = new QTextEdit(this);
+    m_taskRequirements->setReadOnly(true);
+    m_taskRequirements->setText("Requirements go here");
+    m_taskRequirements->setVisible(false);
     m_taskDescription = new QTextEdit(this);
     m_taskDescription->setReadOnly(true);
     m_taskDescription->setText("Description goes here");
@@ -28,8 +38,11 @@ TaskWidget::TaskWidget(QWidget *parent, const QString &taskName)
     QObject::connect(executeBtn, &QPushButton::clicked,
                      this, &TaskWidget::executeTask);
 
+    bgLayout->addWidget(m_taskDescription, 2);
+    bgLayout->addWidget(m_taskRequirements, 1);
+    background->setLayout(bgLayout);
     layout->addWidget(title);
-    layout->addWidget(m_taskDescription);
+    layout->addWidget(background);
     layout->addWidget(executeBtn);
     setLayout(layout);
 }
@@ -51,7 +64,35 @@ void TaskWidget::setScriptsDirectory(const QDir &directory)
 
 void TaskWidget::setDescription(const QString &description)
 {
-    m_taskDescription->setText(description);
+    const QString heading("<h3>Description</h3>");
+    m_taskDescription->setHtml(heading+description);
+}
+
+void TaskWidget::setRequirements(const QStringList &requirements)
+{
+    bool canSetRequirements = !requirements.isEmpty();
+    m_taskRequirements->setVisible(canSetRequirements);
+    if(!canSetRequirements){
+        m_taskRequirements->setHtml(QString());
+        return;
+    }
+
+    const QString heading = "<h3>Requirements</h3>";
+    const QString htmlStart = "<ul>";
+    const QString htmlEnd = "</ul>";
+
+    QString items;
+    for(auto requirement : requirements){
+        items.append(QString("<li>%1</li>").arg(requirement));
+    }
+
+    m_taskRequirements->setHtml(heading+htmlStart+items+htmlEnd);
+}
+
+void TaskWidget::appendResults(const QString &result)
+{
+    QString prefix("=>");
+    m_taskDescription->append(prefix+result);
 }
 
 QString TaskWidget::taskName() const
