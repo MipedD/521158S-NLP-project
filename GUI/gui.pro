@@ -19,6 +19,7 @@ SOURCES += \
         pythonscriptrunner.cpp \
         task0widget.cpp \
         task10widget.cpp \
+        task12widget.cpp \
         task1widget.cpp \
         task2widget.cpp \
         task4widget.cpp \
@@ -33,6 +34,7 @@ HEADERS += \
     pythonscriptrunner.h \
     task0widget.h \
     task10widget.h \
+    task12widget.h \
     task1widget.h \
     task2widget.h \
     task4widget.h \
