@@ -2,7 +2,7 @@
 #define TASKWIDGET_H
 
 #include <QWidget>
-#include <QTextEdit>
+#include <QTextBrowser>
 #include <QDir>
 
 #include "pythonscriptrunner.h"
@@ -30,7 +30,7 @@ protected:
     PythonScriptRunner *m_runner;
     QDir m_scriptsDir;
     QDir m_datasetDir;
-    QTextEdit *m_taskDescription;
+    QTextBrowser *m_taskDescription;
     QTextEdit *m_taskRequirements;
     QString m_taskName;
 };

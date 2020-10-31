@@ -30,9 +30,11 @@ TaskWidget::TaskWidget(QWidget *parent, const QString &taskName)
     m_taskRequirements->setReadOnly(true);
     m_taskRequirements->setText("Requirements go here");
     m_taskRequirements->setVisible(false);
-    m_taskDescription = new QTextEdit(this);
+    m_taskDescription = new QTextBrowser(this);
     m_taskDescription->setReadOnly(true);
     m_taskDescription->setText("Description goes here");
+    m_taskDescription->setTextInteractionFlags(m_taskDescription->textInteractionFlags() | Qt::LinksAccessibleByMouse);
+    m_taskDescription->setOpenExternalLinks(true);
     QPushButton *executeBtn = new QPushButton(this);
     executeBtn->setText(btnText.arg(m_taskName));
     QObject::connect(executeBtn, &QPushButton::clicked,
