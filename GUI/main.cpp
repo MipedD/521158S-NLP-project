@@ -7,6 +7,8 @@
 #include <QTabWidget>
 #include <QUrl>
 #include <QPushButton>
+#include <QMovie>
+#include <QLabel>
 #include <QDebug>
 
 #include "pythonscriptrunner.h"
@@ -77,6 +79,17 @@ int main(int argc, char *argv[])
     });
     clearLogBtn->setText("Clear log");
     logView->setReadOnly(true);
+    QVBoxLayout *logViewLayout = new QVBoxLayout;
+    QLabel *label = new QLabel(logView);
+    label->setStyleSheet("background-color:transparent;");
+    QMovie *movie = new QMovie(label);
+    movie->setFileName(":/images/loading.gif");
+    label->setMovie(movie);
+    movie->start();
+    label->setVisible(false);
+    logViewLayout->addWidget(label);
+    logViewLayout->setAlignment(label, Qt::AlignCenter);
+    logView->setLayout(logViewLayout);
 
     QTabWidget *tasksTabWidget = new QTabWidget(&root);
     tasksTabWidget->setProperty("dataDir", dataSetDir);
@@ -99,6 +112,14 @@ int main(int argc, char *argv[])
     layout->addWidget(tasksTabWidget);
     layout->addWidget(logView);
     layout->addWidget(clearLogBtn);
+
+    QObject::connect(&scriptRunner, &PythonScriptRunner::started, [label]{
+        label->setVisible(true);
+    });
+
+    QObject::connect(&scriptRunner, &PythonScriptRunner::completed, [label]{
+        label->setVisible(false);
+    });
 
     //Append output to log view
     QObject::connect(&scriptRunner, &PythonScriptRunner::pythonOutput, [logView](const QString &output){

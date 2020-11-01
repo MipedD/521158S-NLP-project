@@ -43,3 +43,6 @@ HEADERS += \
     task5widget.h \
     task7widget.h \
     taskwidget.h
+
+RESOURCES += \
+    resources.qrc
