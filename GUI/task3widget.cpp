@@ -28,6 +28,7 @@ void Task3Widget::doExecuteTask()
 
 void Task3Widget::displayGraph()
 {
+    disconnect(m_runner, &PythonScriptRunner::completed, this, &Task3Widget::displayGraph);
     QLabel *plot = new QLabel(this);
     plot->setWindowTitle("Sentiment analyzer results and ratings");
     plot->setWindowFlag(Qt::Window, true);
