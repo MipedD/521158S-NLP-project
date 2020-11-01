@@ -22,6 +22,7 @@ SOURCES += \
         task12widget.cpp \
         task1widget.cpp \
         task2widget.cpp \
+        task3widget.cpp \
         task4widget.cpp \
         task5widget.cpp \
         task7widget.cpp \
@@ -39,6 +40,7 @@ HEADERS += \
     task12widget.h \
     task1widget.h \
     task2widget.h \
+    task3widget.h \
     task4widget.h \
     task5widget.h \
     task7widget.h \
