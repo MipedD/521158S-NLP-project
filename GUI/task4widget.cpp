@@ -23,5 +23,20 @@ void Task4Widget::doExecuteTask()
     args << "-c";
     args << "2";
     args << "-a";
+
+    connect(m_runner, &PythonScriptRunner::completed, this, &Task4Widget::extractDifferentCategories);
     m_runner->runPythonScript(m_scriptsDir.path() + "\\empath_categories.py", args);
+}
+
+void Task4Widget::extractDifferentCategories()
+{
+    disconnect(m_runner, &PythonScriptRunner::completed, this, &Task4Widget::extractDifferentCategories);
+    QStringList args;
+    args << "-i";
+    args << QUrl::fromLocalFile(m_datasetDir.path() + "\\dataset_processed.csv").toLocalFile();
+    args << "-o";
+    args << QUrl::fromLocalFile(m_datasetDir.path() + "\\empath_categories.txt").toLocalFile();
+    args << "-c";
+    args << "10";
+    m_runner->runPythonScript(m_scriptsDir.path() + "\\find_empath_categories.py", args);
 }

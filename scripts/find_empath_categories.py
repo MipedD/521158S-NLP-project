@@ -14,7 +14,7 @@ from nltk.sentiment.vader import SentimentIntensityAnalyzer
 def process_csv(in_file, out_file, column):
     start_time = time.time()
     
-    f = open(in_file, "r") 
+    f = open(in_file, "r", encoding='utf-8')
     csv_reader = csv.reader(f, delimiter=',', quotechar='"')
     
     positive = set()

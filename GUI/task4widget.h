@@ -11,6 +11,7 @@ public:
 
 protected:
     virtual void doExecuteTask();
+    virtual void extractDifferentCategories();
 };
 
 
