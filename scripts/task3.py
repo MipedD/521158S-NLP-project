@@ -21,13 +21,13 @@ def scatter_plot(a_ratings, a_analyzer1, a_analyzer2, a_range, a_output_file):
     y_overall1 = a_analyzer1[a_range[0]:a_range[1]]
     #Same for the analyzer2
     y_overall2 = a_analyzer2[a_range[0]:a_range[1]]
-    s = 2
+    s = 1
     fig = plt.figure(figsize=(15,5))
-    plt.scatter(x, y_overall1, s, c="g", alpha=1, marker="o",
+    plt.scatter(x, y_overall1, s, c="black", alpha=0.2, marker="o",
                 label="Sentistrength")
-    plt.scatter(x, y_overall2, s, c="b", alpha=1, marker="o",
+    plt.scatter(x, y_overall2, s, c="green", alpha=0.2, marker="o",
                 label="Vader")
-    plt.scatter(x, y_ratings, s, c="red", alpha=1, marker="o",
+    plt.scatter(x, y_ratings, s, c="red", alpha=0.2, marker="o",
                 label="Rating")
     plt.xlabel("Review")
     plt.ylabel("Sentiment value")
@@ -98,9 +98,13 @@ else:
     print("Normalizing sentiment analyzer output and reviews for plotting..")
     #Normalize values for plotting
     scaler = MinMaxScaler()
-    vader_norm = scaler.fit_transform(data[["sentiment.overall.vader"]])
-    ss_norm =  scaler.fit_transform(data[["sentiment.overall.sentistrength"]])
-    rating_norm =  scaler.fit_transform(data[["reviews.rating"]])
+    plot_data = data.head(10000)
+    print(plot_data)
+    plot_data = plot_data.sort_values(by='reviews.rating')
+    print(plot_data)
+    vader_norm = scaler.fit_transform(plot_data[["sentiment.overall.vader"]])
+    ss_norm =  scaler.fit_transform(plot_data[["sentiment.overall.sentistrength"]])
+    rating_norm =  scaler.fit_transform(plot_data[["reviews.rating"]])
     #Plot values
     print("Plotting..")
-    scatter_plot(rating_norm, ss_norm, vader_norm, [0,1000], output_file)
+    scatter_plot(rating_norm, ss_norm, vader_norm, [0,10000], output_file)
