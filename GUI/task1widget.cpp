@@ -12,7 +12,7 @@ Task1Widget::Task1Widget(QWidget *parent, const QString &taskName)
             "Data is first processed into a format which is recognized by SentiStrength (tab separated CSV) "
             "after which SentiStrength will assess the sentiment polarity for each review individually and write it to the"
             " file parsed for SentiStrength. "
-            "After analysis is completed the input file for SentiStrength is read and combined with the main database"
+            "After analysis is completed the input file for SentiStrength is read and combined with the main database file"
             " and temporary file is deleted as it is now obsolete.";
     setDescription(description);
 

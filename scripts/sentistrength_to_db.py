@@ -32,11 +32,11 @@ for opt in opts:
 if input_file == "" or output_file == "":
     print("Usage: -i [in_file] -o [out_file]")
 else:
-    print("Reading sentistrength output..")
+    print("Reading SentiStrength output from", input_file)
     data = pd.read_csv(input_file, sep='\t', encoding='ISO-8859-1')
-    print("Mergin data..")
+    print("Adding SentiStrength results to", output_file)
     data = merge(data, output_file)
-    print("Saving file..")
     data.to_csv(output_file, index=False, encoding='utf-8')
-    print("Removing temporary file..")
+    print("Removing temporary file", input_file)
     os.remove(input_file)
+    print("<result>SentiStrength analysis results added to database</result>")

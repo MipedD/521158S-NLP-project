@@ -29,7 +29,8 @@ for opt in opts:
 if input_file == "" or output_file == "":
     print("Please specify input and output file")
 else:
-    print("Reading dataset...")
+    print("Reading dataset:", input_file)
     data = pd.read_csv(input_file, sep=',', encoding='utf_8')
-    print("Writing dataset..")
+    print("Preparing dataset for SentiStrength, writing modified copy to", output_file)
     data.to_csv(output_file, index=False, encoding='utf_8', sep='\t')
+    print("<result>Dataset ready for SentiStrength</result>")
