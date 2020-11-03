@@ -5,12 +5,19 @@ Task4Widget::Task4Widget(QWidget *parent, const QString &taskName)
 {
     const QString description =
             "This step is about finding lexical categories within each review. <a href=https://github.com/Ejhfast/empath-client>Empath</a> "
-            "is used for finding the categories and empath output will be saved to the database."
+            "is used for finding the categories and empath output will be saved to the database. "
+            "Additionally each unique category will be extracted and saved into empath_categories.txt separately."
 
             "<br><br>"
 
             "<b>Please note</b>: running the script may take up to few minutes. The amount of data processed is significant.";
     setDescription(description);
+
+    QStringList requirements;
+    requirements << "Preparation step completed";
+    requirements << "When using GUI: tasks 1 - 3 completed";
+    requirements << "Empath installed";
+    setRequirements(requirements);
 }
 
 void Task4Widget::doExecuteTask()

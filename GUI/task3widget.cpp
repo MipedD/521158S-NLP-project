@@ -12,6 +12,12 @@ Task3Widget::Task3Widget(QWidget *parent, const QString &taskName)
             "very informative at all. <br><br>"
             "Additionally pearson coefficient correlation is calculated for both analyzer results in relation to the user ratings.";
     setDescription(description);
+
+    QStringList requirements;
+    requirements << "Preparation step completed";
+    requirements << "Task 1 completed";
+    requirements << "Task 2 completed";
+    setRequirements(requirements);
 }
 
 void Task3Widget::doExecuteTask()

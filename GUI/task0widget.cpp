@@ -8,6 +8,10 @@ Task0Widget::Task0Widget(QWidget *parent, const QString &taskName)
             "In practice all but the most essential (reviews.text, reviews.rating) columns are removed from the dataset. "
             "Additionally a new column ID is added which holds a unique key for each review.";
     setDescription(description);
+
+    QStringList requirements;
+    requirements << "For this step as well as any following, you need to have python 3.6 installed and added to path";
+    setRequirements(requirements);
 }
 
 void Task0Widget::doExecuteTask()

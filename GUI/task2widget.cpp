@@ -8,6 +8,11 @@ Task2Widget::Task2Widget(QWidget *parent, const QString &taskName)
             "The process here is almost identical to what was done in the previous step except results will be written"
             " directly to the database file.";
     setDescription(description);
+
+    QStringList requirements;
+    requirements << "Preparation step completed";
+    requirements << "nltk vader installed";
+    setRequirements(requirements);
 }
 
 void Task2Widget::doExecuteTask()
