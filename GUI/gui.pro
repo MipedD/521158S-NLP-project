@@ -26,6 +26,7 @@ SOURCES += \
         task4widget.cpp \
         task5widget.cpp \
         task7widget.cpp \
+        task9widget.cpp \
         taskwidget.cpp
 
 # Default rules for deployment.
@@ -44,6 +45,7 @@ HEADERS += \
     task4widget.h \
     task5widget.h \
     task7widget.h \
+    task9widget.h \
     taskwidget.h
 
 RESOURCES += \
