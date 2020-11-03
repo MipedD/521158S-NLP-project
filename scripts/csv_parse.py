@@ -29,6 +29,7 @@ def process_csv(in_file, out_file, columns):
         line_count += 1
 
     print('Processed', line_count, 'rows in', "{:.2f}".format(time.time() - start_time), 'seconds.')
+    print('<result> Output can be found at', out_file, '</result>')
     
 argv = sys.argv[1:]
 opts, args = getopt.getopt(argv, 'i:o:c:')
