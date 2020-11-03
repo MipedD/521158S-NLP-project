@@ -41,6 +41,7 @@ def process_sentistrenght(sentistrenght_file, ss_positive, ss_negative, posneg):
                     senti_set.add(content[0])
       
     f.close()
+    print("<result>SentiStrength found", len(senti_set), posneg, "reviews.</result>")
     return senti_set
 
 def process_vader(vader_file, vader_compound, posneg):
@@ -66,6 +67,7 @@ def process_vader(vader_file, vader_compound, posneg):
             line_count += 1
 
     f.close()
+    print("<result>Vader found", len(vader_set), posneg, "reviews.</result>")
     return vader_set
     
 def filter_empath(empath_file, ids):
@@ -73,7 +75,57 @@ def filter_empath(empath_file, ids):
     csv_reader = csv.reader(f, delimiter=',', quotechar='"')
     
     filtered = filter(lambda x: (x[0] in ids), list(csv_reader))
+    f.close()
     return list(filtered)
+
+def check_results(empath_file, positive_set, negative_set):
+    positive_list = filter_empath(empath_file, positive_set)
+    negative_list = filter_empath(empath_file, negative_set)
+    
+    f = open(empath_file, "r") 
+    csv_reader = csv.reader(f, delimiter=',', quotechar='"')
+    
+    all_sum = 0
+    neutral_sum = 0
+    line_count = 0
+    neutral_count = 0
+    
+    for row in csv_reader:
+        if line_count == 0:
+            line_count += 1
+        else:
+            if row[0] not in positive_set and row[0] not in positive_set:
+                neutral_sum += int(row[1])
+                neutral_count += 1
+            all_sum += int(row[1])
+            line_count += 1
+    f.close()
+    
+    positive_count = len(positive_list)
+    negative_count = len(negative_list)
+    positive_sum = 0
+    negative_sum = 0
+
+    for row in positive_list:
+        positive_sum += int(row[1])
+        
+    for row in negative_list:
+        negative_sum += int(row[1])
+        
+    all_avg = all_sum / (line_count - 1)
+    positive_avg = positive_sum / positive_count
+    negative_avg = negative_sum / negative_count
+    neutral_avg = neutral_sum / neutral_count
+    
+    print("<result>")
+    print("Total # of reviews:", line_count - 1)
+    print("# Intersection of positive sentiment:", positive_count)
+    print("# Intersection of negative sentiment:", negative_count)
+    print("Average of all reviews:", "{:.2f}".format(all_avg))
+    print("Average of reviews with positive sentiment:", "{:.2f}".format(positive_avg))
+    print("Average of reviews with neutral sentiment:", "{:.2f}".format(neutral_avg))
+    print("Average of reviews with negative sentiment:", "{:.2f}".format(negative_avg))
+    print("</result>")
     
 argv = sys.argv[1:]
 opts, args = getopt.getopt(argv, 's:p:n:v:c:e:')
@@ -114,8 +166,7 @@ else:
     senti_negative &= vader_negative
     
     if empath_file != "":
-        filtered_postive = filter_empath(empath_file, senti_positive)
-        filtered_negative = filter_empath(empath_file, senti_negative)
+        check_results(empath_file, senti_positive, senti_negative)
 
     print('Finished in', "{:.2f}".format(time.time() - start_time), 'seconds.')
 
