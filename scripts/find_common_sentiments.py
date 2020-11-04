@@ -2,6 +2,7 @@ import csv
 import sys
 import getopt
 import time
+import collections
 
 # This module takes the following arguments:
 # '-s': sentistrenght_file = File with SentiStrenght analysis
@@ -101,6 +102,20 @@ def filter_categoty_sentiments(category_sentiments_file, category):
     
     return categories_str.split(",")    
 
+def category_freq(category_list, category_column):
+    category_count =  dict()
+    
+    for line in category_list:
+        categories = line[category_column]
+        categories = eval(categories)
+        for category in categories:
+            if category in category_count:
+                category_count[category] = category_count[category] + 1
+            else:
+                category_count[category] = 1
+              
+    return category_count
+
 def check_results(empath_file, empath_id_column, empath_rating_column, empath_category_column, category_sentiments_file, positive_set, negative_set):
     empath_id_column = int(empath_id_column)
     empath_rating_column = int(empath_rating_column)
@@ -152,6 +167,9 @@ def check_results(empath_file, empath_id_column, empath_rating_column, empath_ca
     negative_sum = 0
     all_positive_sum = 0
     all_negative_sum = 0
+    
+    positive_categories_count = category_freq(all_postive_list, empath_category_column)
+    negative_categories_count = category_freq(all_negative_list, empath_category_column)
 
     for row in positive_list:
         positive_sum += int(row[empath_rating_column])
@@ -183,7 +201,14 @@ def check_results(empath_file, empath_id_column, empath_rating_column, empath_ca
     print("Average of reviews with neutral sentiment:", "{:.2f}".format(neutral_avg))
     print("Average of reviews with negative sentiment:", "{:.2f}".format(negative_avg))
     print("Average of reviews with positive sentiment and category:", "{:.2f}".format(all_positive_avg))
-    print("Average of reviews with negative sentiment and category:", "{:.2f}".format(all_negative_avg))
+    print("Average of reviews with negative sentiment and category:", "{:.2f}".format(all_negative_avg), "\n")
+    
+    print("Category frequency of reviews with positive sentiments:")
+    for w in sorted(positive_categories_count, key=positive_categories_count.get, reverse=True):
+        print(w, positive_categories_count[w])
+    print("\nCategory frequency of reviews with negative sentiments:")
+    for w in sorted(negative_categories_count, key=negative_categories_count.get, reverse=True):
+        print(w, negative_categories_count[w])
     print("</result>")
     
 argv = sys.argv[1:]
