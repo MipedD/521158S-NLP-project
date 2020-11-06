@@ -16,7 +16,7 @@ import time
 
 
 def parse_nltk_file(nltk_file):
-    f = open(nltk_file, "r") 
+    f = open(nltk_file, "r", encoding='utf-8')
     csv_reader = csv.reader(f, delimiter=',', quotechar='"')
 
     nltk_list = list()
@@ -37,6 +37,8 @@ def parse_entity(nltk_list, entity):
     ids.append(entity)
     
     for row in nltk_list:
+        if len(row) == 0:
+            continue
         if line_count == 0:
             try:
                 category_column = row.index(entity)
@@ -61,7 +63,7 @@ def analyse_category(review_file, category, id_column, review_column):
     sum_filtered_ratings = 0
     num_filtered_ratings = 0
     
-    f = open(review_file, "r") 
+    f = open(review_file, "r", encoding='utf-8')
     csv_reader = csv.reader(f, delimiter=',', quotechar='"')
     filtered = filter(lambda x: (x[id_column] in category), list(csv_reader))
     f.seek(0)
@@ -76,13 +78,11 @@ def analyse_category(review_file, category, id_column, review_column):
         sum_filtered_ratings += float(row[review_column])
         num_filtered_ratings += 1
 
-    print("<result>")
-    print("For named-entity type:", category_name)
-    print("From the total of", num_ratings, "reviews", num_filtered_ratings, "contain the type")
-    print("Average of all reviews:", "{:.2f}".format(sum_ratings / num_ratings))
-    print("Average of reviews with named-entity:", "{:.2f}".format(sum_filtered_ratings / num_filtered_ratings))
-    print("</result>")
-
+    print("<result>", "For named-entity type:", category_name, "</result>")
+    print("<result>", "    From the total of", num_ratings, "reviews", num_filtered_ratings, "contain the type", "</result>")
+    print("<result>", "    Average of all reviews:", "{:.2f}".format(sum_ratings / num_ratings), "</result>")
+    print("<result>", "    Average of reviews with named-entity:", "{:.2f}".format(sum_filtered_ratings / num_filtered_ratings), "</result>")
+    print()
 
 argv = sys.argv[1:]
 opts, args = getopt.getopt(argv, 'i:r:d:f:')
