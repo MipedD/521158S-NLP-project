@@ -28,8 +28,8 @@ def process_sentistrenght(sentistrenght_file, ss_positive, ss_negative, posneg, 
     ss_id = int(ss_id)
     pos_wanted = 1 if posneg == "positive" else 0
     
-    f = open(sentistrenght_file, "r") 
-    csv_reader = csv.reader(f, delimiter='\t', quotechar='"')
+    f = open(sentistrenght_file, "r", encoding='utf-8')
+    csv_reader = csv.reader(f, delimiter=',', quotechar='"')
 
     line_count = 0
     senti_set = set()
@@ -40,13 +40,16 @@ def process_sentistrenght(sentistrenght_file, ss_positive, ss_negative, posneg, 
         else:
             content = list(row)
             if content:
-                positive_sentiment = int(content[ss_positive])
-                negative_sentiment = int(content[ss_negative])
-                if positive_sentiment + negative_sentiment > 0 and pos_wanted == 1:
-                    senti_set.add(content[ss_id])
-                elif positive_sentiment + negative_sentiment < 0 and pos_wanted == 0:
-                    senti_set.add(content[ss_id])
-      
+                try:
+                    positive_sentiment = float(content[ss_positive])
+                    negative_sentiment = float(content[ss_negative])
+                    if positive_sentiment + negative_sentiment > 0 and pos_wanted == 1:
+                        senti_set.add(content[ss_id])
+                    elif positive_sentiment + negative_sentiment < 0 and pos_wanted == 0:
+                        senti_set.add(content[ss_id])
+                except:
+                    continue
+
     f.close()
 
     print("<result>SentiStrength found", len(senti_set), posneg, "reviews.</result>")
@@ -57,7 +60,7 @@ def process_vader(vader_file, vader_compound, posneg, vader_id):
     vader_id = int(vader_id)
     pos_wanted = 1 if posneg == "positive" else 0
      
-    f = open(vader_file, "r") 
+    f = open(vader_file, "r", encoding='utf-8')
     csv_reader = csv.reader(f, delimiter=',', quotechar='"')
     
     vader_set = set()
@@ -68,19 +71,22 @@ def process_vader(vader_file, vader_compound, posneg, vader_id):
             line_count += 1
         else:
             content = list(row)
-            compound = float(content[vader_compound])
-            if compound > 0 and pos_wanted == 1:
-                vader_set.add(content[vader_id])
-            elif compound < 0 and pos_wanted == 0:
-                vader_set.add(content[vader_id])
-            line_count += 1
+            try:
+                compound = float(content[vader_compound])
+                if compound > 0 and pos_wanted == 1:
+                    vader_set.add(content[vader_id])
+                elif compound < 0 and pos_wanted == 0:
+                    vader_set.add(content[vader_id])
+                line_count += 1
+            except:
+                continue
 
     f.close()
     print("<result>Vader found", len(vader_set), posneg, "reviews.</result>")
     return vader_set
     
 def filter_empath(empath_file, empath_id_column, ids):
-    f = open(empath_file, "r") 
+    f = open(empath_file, "r", encoding='utf-8')
     csv_reader = csv.reader(f, delimiter=',', quotechar='"')
     
     filtered = filter(lambda x: (x[empath_id_column] in ids), list(csv_reader))
@@ -88,7 +94,8 @@ def filter_empath(empath_file, empath_id_column, ids):
     return list(filtered)
 
 def filter_categoty_sentiments(category_sentiments_file, category):
-    f = open(category_sentiments_file, "r") 
+    print(category_sentiments_file)
+    f = open(category_sentiments_file, "r", encoding='utf-8')
     categories_str = f.read()
     f.close()
     
@@ -125,7 +132,7 @@ def check_results(empath_file, empath_id_column, empath_rating_column, empath_ca
     positive_categories = filter_categoty_sentiments(category_sentiments_file, "positive:")
     negative_categories = filter_categoty_sentiments(category_sentiments_file, "negative:")
     
-    f = open(empath_file, "r") 
+    f = open(empath_file, "r", encoding='utf-8')
     csv_reader = csv.reader(f, delimiter=',', quotechar='"')
     
     all_sum = 0
@@ -145,7 +152,7 @@ def check_results(empath_file, empath_id_column, empath_rating_column, empath_ca
                         negative_reviews_negative_category.add(row[empath_id_column])
                         
             elif row[empath_id_column] not in positive_set and row[empath_id_column] not in positive_set:
-                neutral_sum += int(row[empath_rating_column])
+                neutral_sum += float(row[empath_rating_column])
                 neutral_count += 1
 
             elif row[empath_id_column] in positive_set:   
@@ -153,7 +160,7 @@ def check_results(empath_file, empath_id_column, empath_rating_column, empath_ca
                     if row[empath_category_column].find(category) != -1:
                         positive_reviews_positive_category.add(row[empath_id_column])
                         
-            all_sum += int(row[empath_rating_column])
+            all_sum += float(row[empath_rating_column])
             line_count += 1
     f.close()
     
@@ -172,16 +179,16 @@ def check_results(empath_file, empath_id_column, empath_rating_column, empath_ca
     negative_categories_count = category_freq(all_negative_list, empath_category_column)
 
     for row in positive_list:
-        positive_sum += int(row[empath_rating_column])
+        positive_sum += float(row[empath_rating_column])
         
     for row in negative_list:
-        negative_sum += int(row[empath_rating_column])
+        negative_sum += float(row[empath_rating_column])
         
     for row in all_postive_list:
-        all_positive_sum += int(row[empath_rating_column])
+        all_positive_sum += float(row[empath_rating_column])
         
     for row in all_negative_list:
-        all_negative_sum += int(row[empath_rating_column])
+        all_negative_sum += float(row[empath_rating_column])
         
     all_avg = all_sum / (line_count - 1)
     positive_avg = positive_sum / positive_count
@@ -190,7 +197,7 @@ def check_results(empath_file, empath_id_column, empath_rating_column, empath_ca
     all_positive_avg = all_positive_sum / positive_review_and_category_count
     all_negative_avg = all_negative_sum / negative_review_and_category_count
     
-    print("<result>")
+    #print("<result>")
     print("# Total of reviews:", line_count - 1)
     print("# Intersection of positive sentiment:", positive_count)
     print("# Intersection of negative sentiment:", negative_count)
@@ -209,7 +216,7 @@ def check_results(empath_file, empath_id_column, empath_rating_column, empath_ca
     print("\nCategory frequency of reviews with negative sentiments:")
     for w in sorted(negative_categories_count, key=negative_categories_count.get, reverse=True):
         print(w, negative_categories_count[w])
-    print("</result>")
+    #print("</result>")
     
 argv = sys.argv[1:]
 opts, args = getopt.getopt(argv, 's:p:n:v:c:e:i:r:l:g:a:b:')
