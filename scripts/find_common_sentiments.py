@@ -145,6 +145,7 @@ def check_results(empath_file, empath_id_column, empath_rating_column, empath_ca
     negative_category_set = set()
   
     for row in csv_reader:
+        category_total = 0
         if line_count == 0:
             line_count += 1
         else:
@@ -154,11 +155,16 @@ def check_results(empath_file, empath_id_column, empath_rating_column, empath_ca
                 
             for category in negative_categories:
                 if row[empath_category_column].find(category) != -1:
-                    negative_category_set.add(row[empath_id_column])
+                    category_total -= 1                    
                          
             for category in positive_categories:
                 if row[empath_category_column].find(category) != -1:
-                    positive_category_set.add(row[empath_id_column])
+                    category_total += 1
+                    
+            if category_total > 0:
+                positive_category_set.add(row[empath_id_column])
+            elif category_total < 0:
+                negative_category_set.add(row[empath_id_column])
                         
             all_sum += float(row[empath_rating_column])
             line_count += 1
