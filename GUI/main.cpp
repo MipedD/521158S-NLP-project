@@ -75,6 +75,7 @@ int main(int argc, char *argv[])
 
     //Basic gui
     QWidget root;
+    root.setWindowTitle("Project group 6 GUI");
     QVBoxLayout *layout = new QVBoxLayout;
     QTextEdit *logView = new QTextEdit(&root);
     QPushButton *clearLogBtn = new QPushButton(&root);

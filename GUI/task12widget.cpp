@@ -9,6 +9,11 @@ Task12Widget::Task12Widget(QWidget *parent, const QString &taskName)
             "seeing which class (ambiguous vs non-ambiguous) has the larger value by average. The results are "
             "printed into the output panel below. Additionally the ARI value can be found in the database.";
     setDescription(description);
+
+    QStringList requirements;
+    requirements << "Preparation step completed";
+    requirements << "All previous steps";
+    setRequirements(requirements);
 }
 
 void Task12Widget::doExecuteTask()

@@ -14,6 +14,11 @@ Task7Widget::Task7Widget(QWidget *parent, const QString &taskName)
 
             "<b>Please note</b>: running the script <b>will</b> take several minutes.";
     setDescription(description);
+    QStringList requirements;
+    requirements << "Preparation step completed";
+    requirements << "All previous steps";
+    requirements << "A bit of patience..";
+    setRequirements(requirements);
 }
 
 void Task7Widget::doExecuteTask()

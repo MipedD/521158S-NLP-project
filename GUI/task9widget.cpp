@@ -11,6 +11,11 @@ Task9Widget::Task9Widget(QWidget *parent, const QString &taskName)
             "Note: reviews are in the scale of 1-5 and positive are &gt;=4 and negative are &lt;=2.";
 
     setDescription(description.arg("explanatory_wording.csv"));
+
+    QStringList requirements;
+    requirements << "Preparation step completed";
+    requirements << "All previous steps";
+    setRequirements(requirements);
 }
 
 void Task9Widget::doExecuteTask()

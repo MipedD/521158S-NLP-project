@@ -14,6 +14,11 @@ Task10Widget::Task10Widget(QWidget *parent, const QString &taskName)
 
             "Finally for task 11 it is checked whether ambiguous reviews are likely to be shorter than others.";
     setDescription(description);
+
+    QStringList requirements;
+    requirements << "Preparation step completed";
+    requirements << "All previous steps";
+    setRequirements(requirements);
 }
 
 void Task10Widget::doExecuteTask()
