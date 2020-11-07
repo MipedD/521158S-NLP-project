@@ -8,8 +8,9 @@ Task3Widget::Task3Widget(QWidget *parent, const QString &taskName)
     const QString description =
             "In this task the Vader and SentiStrength results are going to be plotted in the same graph along with the actual reviews. "
             "The results from both analyzers are going to be normalized along with the actual reviews to get a more meaningful graph. "
-            "The graph will only contain the first 1000 points of the dataset as plotting the results for all 10 000 values wouldn't look "
-            "very informative at all. <br><br>"
+            "The graph is sorted by user rating so comparing the deviation from the user rating is easier. "
+            "<br><br>"
+
             "Additionally pearson coefficient correlation is calculated for both analyzer results in relation to the user ratings.";
     setDescription(description);
 
