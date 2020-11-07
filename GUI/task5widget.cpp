@@ -6,7 +6,20 @@
 Task5Widget::Task5Widget(QWidget *parent, const QString &taskName)
     : TaskWidget(parent, taskName)
 {
+    const QString description =
+            "This covers the task descriptions for 5 and 6 from the assignment. "
+            "First sentiment analyzer results are separated into positive (&gt;= 4.0) and negative (&lt;= 2.0). "
+            "For the matching positive and negative reviews from both analyzers "
+            "the frequency of empath categories for both negative and positive reviews "
+            "is calculated. The results are displayed in a histogram where the first half "
+            "of the categories were considered positive and the remaining are considered negative by VADER.";
 
+    setDescription(description);
+
+    QStringList requirements;
+    requirements << "Preparation step completed";
+    requirements << "All previous steps";
+    setRequirements(requirements);
 }
 
 void Task5Widget::doExecuteTask()
