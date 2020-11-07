@@ -141,35 +141,33 @@ def check_results(empath_file, empath_id_column, empath_rating_column, empath_ca
     neutral_sum = 0
     line_count = 0
     neutral_count = 0
-    positive_reviews_positive_category = set()
-    negative_reviews_negative_category = set()
+    positive_category_set = set()
+    negative_category_set = set()
   
     for row in csv_reader:
         if line_count == 0:
             line_count += 1
         else:
-            if row[empath_id_column] in negative_set:
-                for category in negative_categories:
-                    if row[empath_category_column].find(category) != -1:
-                        negative_reviews_negative_category.add(row[empath_id_column])
-                        
-            elif row[empath_id_column] not in positive_set and row[empath_id_column] not in positive_set:
+            if row[empath_id_column] not in positive_set and row[empath_id_column] not in positive_set:
                 neutral_sum += float(row[empath_rating_column])
                 neutral_count += 1
-
-            elif row[empath_id_column] in positive_set:   
-                for category in positive_categories:
-                    if row[empath_category_column].find(category) != -1:
-                        positive_reviews_positive_category.add(row[empath_id_column])
+                
+            for category in negative_categories:
+                if row[empath_category_column].find(category) != -1:
+                    negative_category_set.add(row[empath_id_column])
+                         
+            for category in positive_categories:
+                if row[empath_category_column].find(category) != -1:
+                    positive_category_set.add(row[empath_id_column])
                         
             all_sum += float(row[empath_rating_column])
             line_count += 1
     f.close()
     
-    all_postive_list = filter_empath(empath_file, empath_id_column, positive_reviews_positive_category)
-    all_negative_list = filter_empath(empath_file, empath_id_column, negative_reviews_negative_category)
-    positive_review_and_category_count = len(positive_reviews_positive_category)
-    negative_review_and_category_count = len(negative_reviews_negative_category)
+    postive_category_list = filter_empath(empath_file, empath_id_column, positive_category_set)
+    negative_category_list = filter_empath(empath_file, empath_id_column, negative_category_set)
+    positive_category_count = len(positive_category_set)
+    negative_category_count = len(negative_category_set)
     positive_count = len(positive_list)
     negative_count = len(negative_list)
     positive_sum = 0
@@ -177,8 +175,8 @@ def check_results(empath_file, empath_id_column, empath_rating_column, empath_ca
     all_positive_sum = 0
     all_negative_sum = 0
     
-    positive_categories_count = category_freq(all_postive_list, empath_category_column)
-    negative_categories_count = category_freq(all_negative_list, empath_category_column)
+    positive_categories_count = category_freq(postive_category_list, empath_category_column)
+    negative_categories_count = category_freq(negative_category_list, empath_category_column)
 
     for row in positive_list:
         positive_sum += float(row[empath_rating_column])
@@ -186,31 +184,31 @@ def check_results(empath_file, empath_id_column, empath_rating_column, empath_ca
     for row in negative_list:
         negative_sum += float(row[empath_rating_column])
         
-    for row in all_postive_list:
+    for row in postive_category_list:
         all_positive_sum += float(row[empath_rating_column])
         
-    for row in all_negative_list:
+    for row in negative_category_list:
         all_negative_sum += float(row[empath_rating_column])
         
     all_avg = all_sum / (line_count - 1)
     positive_avg = positive_sum / positive_count
     negative_avg = negative_sum / negative_count
     neutral_avg = neutral_sum / neutral_count
-    all_positive_avg = all_positive_sum / positive_review_and_category_count
-    all_negative_avg = all_negative_sum / negative_review_and_category_count
+    all_positive_avg = all_positive_sum / positive_category_count
+    all_negative_avg = all_negative_sum / negative_category_count
 
     #print("<result>")
     print("# Total of reviews:", line_count - 1)
     print("# Intersection of positive sentiment:", positive_count)
     print("# Intersection of negative sentiment:", negative_count)
-    print("# Positive sentiment and category:", positive_review_and_category_count)
-    print("# Negative sentiment and category:", negative_review_and_category_count)
+    print("# Reviews with positive category:", positive_category_count)
+    print("# Reviews with negative category:", negative_category_count)
     print("Average of all reviews:", "{:.2f}".format(all_avg))
     print("Average of reviews with positive sentiment:", "{:.2f}".format(positive_avg))
     print("Average of reviews with neutral sentiment:", "{:.2f}".format(neutral_avg))
     print("Average of reviews with negative sentiment:", "{:.2f}".format(negative_avg))
-    print("Average of reviews with positive sentiment and category:", "{:.2f}".format(all_positive_avg))
-    print("Average of reviews with negative sentiment and category:", "{:.2f}".format(all_negative_avg), "\n")
+    print("Average of reviews with positive category:", "{:.2f}".format(all_positive_avg))
+    print("Average of reviews with negative category:", "{:.2f}".format(all_negative_avg), "\n")
     
     print("Category frequency of reviews with positive sentiments:")
     for w in sorted(positive_categories_count, key=positive_categories_count.get, reverse=True):
