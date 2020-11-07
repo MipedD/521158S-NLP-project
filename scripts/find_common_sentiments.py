@@ -3,6 +3,8 @@ import sys
 import getopt
 import time
 import collections
+import matplotlib.pyplot as plt
+import numpy as np
 
 # This module takes the following arguments:
 # '-s': sentistrenght_file = File with SentiStrenght analysis
@@ -123,7 +125,7 @@ def category_freq(category_list, category_column):
               
     return category_count
 
-def check_results(empath_file, empath_id_column, empath_rating_column, empath_category_column, category_sentiments_file, positive_set, negative_set):
+def check_results(empath_file, empath_id_column, empath_rating_column, empath_category_column, category_sentiments_file, positive_set, negative_set, output_file):
     empath_id_column = int(empath_id_column)
     empath_rating_column = int(empath_rating_column)
     empath_category_column = int(empath_category_column)
@@ -196,7 +198,7 @@ def check_results(empath_file, empath_id_column, empath_rating_column, empath_ca
     neutral_avg = neutral_sum / neutral_count
     all_positive_avg = all_positive_sum / positive_review_and_category_count
     all_negative_avg = all_negative_sum / negative_review_and_category_count
-    
+
     #print("<result>")
     print("# Total of reviews:", line_count - 1)
     print("# Intersection of positive sentiment:", positive_count)
@@ -217,9 +219,31 @@ def check_results(empath_file, empath_id_column, empath_rating_column, empath_ca
     for w in sorted(negative_categories_count, key=negative_categories_count.get, reverse=True):
         print(w, negative_categories_count[w])
     #print("</result>")
+    negative_series = []
+    positive_series = []
+    all_keys = []
+    for key in positive_categories_count.keys():
+        #if (positive_categories_count[key] / positive_count) > 1:
+        all_keys.append(key)
+    for key in negative_categories_count.keys():
+        #if (negative_categories_count[key] / negative_count) > 1:
+        all_keys.append(key)
+    for category in all_keys:
+        try:positive_series.append(positive_categories_count[category] / positive_count)
+        except:positive_series.append(0)
+        try:negative_series.append(negative_categories_count[category] / negative_count)
+        except:negative_series.append(0)
+    fig = plt.figure(figsize=(24,10))
+    plt.bar(all_keys, negative_series , color="red", alpha=0.5, width=0.8)
+    plt.bar(all_keys, positive_series , color="green", alpha=0.5, width=0.8)
+    plt.ylabel("Frequency of category")
+    plt.legend(("Negative reviews", "Positive reviews"))
+    plt.xticks(rotation=-90)
+    print("Saving plot to", output_file)
+    fig.savefig(output_file)
     
 argv = sys.argv[1:]
-opts, args = getopt.getopt(argv, 's:p:n:v:c:e:i:r:l:g:a:b:')
+opts, args = getopt.getopt(argv, 's:p:n:v:c:e:i:r:l:g:a:b:o:')
 
 sentistrenght_file = ""
 ss_positive = ""
@@ -233,6 +257,7 @@ empath_id_column = ""
 empath_rating_column = ""
 empath_category_column = ""
 category_sentiments_file = ""
+plot_output = ""
 
 for opt in opts:
     if opt[0] == '-s':
@@ -258,23 +283,25 @@ for opt in opts:
     elif opt[0] == '-a':
         ss_id = opt[1]        
     elif opt[0] == '-b':
-        vader_id = opt[1]     
+        vader_id = opt[1]
+    elif opt[0] == '-o':
+        plot_output = opt[1]
 
 if sentistrenght_file == "" or ss_positive == "" or ss_negative == ""  or vader_file == "" or vader_compound == "":
     print("Usage: python find_common_sentiments.py -s [sentistrenght_file] -p [positive_column] -n [negative_column] -v [vader_file] -c [compound_column] -e [empath_file]")
 else:
     start_time = time.time()
-    
+
     senti_positive = process_sentistrenght(sentistrenght_file, ss_positive, ss_negative, "positive", ss_id)
     senti_negative = process_sentistrenght(sentistrenght_file, ss_positive, ss_negative, "negative", ss_id)
     vader_positive = process_vader(vader_file, vader_compound, "positive", vader_id)
     vader_negative = process_vader(vader_file, vader_compound, "negative", vader_id)
-    
+
     senti_positive &= vader_positive
     senti_negative &= vader_negative
-    
+
     if empath_file != "":
-        check_results(empath_file, empath_id_column, empath_rating_column, empath_category_column, category_sentiments_file, senti_positive, senti_negative)
+        check_results(empath_file, empath_id_column, empath_rating_column, empath_category_column, category_sentiments_file, senti_positive, senti_negative, plot_output)
 
     print('Finished in', "{:.2f}".format(time.time() - start_time), 'seconds.')
 

@@ -11,6 +11,7 @@ public:
 
 protected:
     virtual void doExecuteTask();
+    virtual void displayGraph();
 };
 
 #endif // TASK5WIDGET_H
