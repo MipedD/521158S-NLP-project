@@ -4,7 +4,7 @@ This repository contains the work done by project group 6 for natural language p
 
 ## Project description
 
-In short, we try to analyze hotel reviews with sentiment analyzers and some other tools etc etc. 
+In short, we try to analyze hotel reviews with sentiment analyzers and some other tools. 
 
 ## Implementation
 
@@ -34,22 +34,25 @@ where scripts_dir is the directory containing the scripts within the repository 
 
 We also implemented a batch script to run each step of the project without GUI as a backup plan if there's any trouble running GUI. It's fairly simple and also doubles as a list to show what is done in each step. To run the script all you need to do is to CD to the repository root directory and run run_scripts.bat. Running the script literally in any other directory will fail horribly.
 
-The same requirements as for the GUI apply. Running the script may take up to few minutes so please be patient.
+The same requirements as for the GUI apply and additionally java version of SentiStrenght must be in .\scripts\thirdparty\sentistrengthclient  Running the script may take up to few minutes so please be patient.
 
 PROTIP: redirect the output to a file. There's going to be lots of it. 
 
-### (Potentially incomplete) list of required Python modules
+### List of required Python modules
 - textstat
 - matplotlib
 - empath
 - pandas
 - nltk
-- sklearn
-- csv
-- sys
-- time
-- getopt
+- scikit-learn
 - numpy
-- collections
+
+To install these modules run:
+- pip install [module]
+
+It also mandatory to have nltk-data installed. In python shell run:
+- import nltk
+- nltk.download()
+See http://www.nltk.org/data.html
 
 May save you a couple of minutes to install these all before trying to run the scripts.
