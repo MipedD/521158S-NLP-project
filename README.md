@@ -20,13 +20,13 @@ Additionally in one of the steps we're using SentiStrength which requires java t
 
 To build the GUI:
 
-mkdir gui_build && cd gui_build
-qmake ..\gui
-mingw32-make
+- mkdir gui_build && cd gui_build
+- qmake ..\gui
+- mingw32-make
 
 To run the GUI:
 
-gui.exe -s [path_to_scripts_dir] -d [path_to_data_dir]
+- gui.exe -s [path_to_scripts_dir] -d [path_to_data_dir]
 
 where scripts_dir is the directory containing the scripts within the repository and data_dir is the directory containing the data.
 
