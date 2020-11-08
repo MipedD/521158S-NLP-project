@@ -233,9 +233,9 @@ def check_results(empath_file, empath_id_column, empath_rating_column, empath_ca
         #if (negative_categories_count[key] / negative_count) > 1:
         all_keys.append(key)
     for category in all_keys:
-        try:positive_series.append(positive_categories_count[category] / positive_count)
+        try:positive_series.append(positive_categories_count[category] / 10000)
         except:positive_series.append(0)
-        try:negative_series.append(negative_categories_count[category] / negative_count)
+        try:negative_series.append(negative_categories_count[category] / 10000)
         except:negative_series.append(0)
     fig = plt.figure(figsize=(24,10))
     plt.bar(all_keys, negative_series , color="red", alpha=0.5, width=0.8)
